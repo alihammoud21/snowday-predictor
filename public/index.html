@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <title>Snow Day Predictor Canada 🇨🇦 | Accurate School Closure Forecast</title>
+    <meta name="title" content="Snow Day Predictor Canada 🇨🇦 | Accurate School Closure Forecast">
+    <meta name="description" content="Free Canadian snow day predictor with real-time weather data. Enter your postal code for accurate school closure predictions across all provinces. Hourly snowfall forecasts & community voting.">
+    <meta name="keywords" content="snow day predictor, snow day calculator, school closure predictor, Canada snow day, postal code weather, snowfall forecast, school snow day, Canadian weather, winter storm predictor">
+    <meta name="author" content="Snow Day Predictor Canada">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snowdaypredictor.ca/">
+    <meta property="og:title" content="Snow Day Predictor Canada 🇨🇦 | Accurate School Closure Forecast">
+    <meta property="og:description" content="Free Canadian snow day predictor with real-time weather data. Enter your postal code for accurate school closure predictions.">
+    <meta property="og:image" content="https://snowdaypredictor.ca/preview.png">
+    
+    
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://snowdaypredictor.ca/">
+    <meta property="twitter:title" content="Snow Day Predictor Canada 🇨🇦">
+    <meta property="twitter:description" content="Free Canadian snow day predictor with real-time weather data and hourly snowfall forecasts.">
+    <meta property="twitter:image" content="https://snowdaypredictor.ca/preview.png">
+    
+    
+    <link rel="canonical" href="https://snowdaypredictor.ca/">
+    
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Snow Day Predictor Canada",
+      "description": "Accurate snow day predictions for Canadian schools using real-time weather data",
+      "url": "https://snowdaypredictor.ca",
+      "applicationCategory": "Weather",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CAD"
+      },
+      "featureList": "Real-time weather data, Hourly snowfall forecasts, Community voting, Canada-wide coverage",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Canada"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div class="snow-container">
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <button id="backBtn" class="back-btn hidden">← Back</button>
+            <h1>Snow Day Predictor</h1>
+            <p class="subtitle">Will school be cancelled tomorrow?</p>
+        </header>
+
+        <div class="input-section">
+            <div class="card">
+                <div>
+                    <label for="postalCode">Enter Your Canadian Postal Code</label>
+                    <input 
+                        type="text" 
+                        id="postalCode" 
+                        placeholder="e.g., M5H 2N2"
+                        maxlength="7"
+                        autocomplete="off">
+                    <button id="predictBtn" class="predict-btn">Predict Snow Day</button>
+                </div>
+                
+                <div class="info-section">
+                    <h3>How It Works</h3>
+                    <div class="info-item">Analyzes 24-hour weather forecast</div>
+                    <div class="info-item">Checks overnight snow accumulation</div>
+                    <div class="info-item">Monitors wind speed & temperature</div>
+                    <div class="info-item">Calculates school closure probability</div>
+                    <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea15, #764ba215); border-radius: 10px; text-align: center;">
+                        <strong style="color: #667eea;">Canada-Wide Coverage</strong>
+                        <p style="font-size: 0.85em; margin-top: 8px; color: #666;">Supporting all provinces & territories</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result" class="result hidden">
+            <div class="card result-card">
+                <div id="resultContent"></div>
+            </div>
+        </div>
+
+        <div id="hourlyChart" class="hourly-chart hidden">
+            <div class="card">
+                <h3 class="chart-title">HOURLY SNOWFALL</h3>
+                <div class="chart-container">
+                    <div class="chart-y-axis">
+                        <div class="y-label">20cm+ <span class="intensity-label">(Above)</span></div>
+                        <div class="y-label">20cm</div>
+                        <div class="y-label">15cm</div>
+                        <div class="y-label">10cm</div>
+                        <div class="y-label">5cm</div>
+                        <div class="y-label">1cm</div>
+                    </div>
+                    <div class="chart-area">
+                        <svg id="snowfallChart" viewBox="0 0 1200 180" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6ba3ff;stop-opacity:0.9" />
+                                    <stop offset="100%" style="stop-color:#6ba3ff;stop-opacity:0.2" />
+                                </linearGradient>
+                            </defs>
+                            <path id="chartPath" fill="url(#chartGradient)" stroke="#2e7dd8" stroke-width="3"/>
+                        </svg>
+                        <div class="chart-x-axis" id="chartXAxis"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Checking weather conditions...</p>
+        </div>
+
+        <div class="vote-section hidden">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 10px; color: #333;">Community Vote</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;" id="voteLocationText">
+                    What do people in <strong id="voteCity">your area</strong> think? Will there be a snow day?
+                </p>
+                
+                <div class="vote-buttons">
+                    <button type="button" class="vote-btn vote-yes" id="voteYes">
+                        YES<br>
+                        <small>Snow Day!</small>
+                    </button>
+                    <button type="button" class="vote-btn vote-no" id="voteNo">
+                        NO<br>
+                        <small>School On</small>
+                    </button>
+                </div>
+
+                <div class="vote-results">
+                    <h3 style="text-align: center; margin-bottom: 15px; color: #333;">Community Predictions</h3>
+                    <div class="vote-bars">
+                        <div class="vote-bar-container">
+                            <div class="vote-bar-label">
+                                <span style="color: #27ae60;">YES - Snow Day</span>
+                                <span id="yesPercent" style="color: #27ae60;">0%</span>
+                            </div>
+                            <div class="vote-bar-bg">
+                                <div class="vote-bar-fill yes" id="yesBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="vote-bar-container">
+                            <div class="vote-bar-label">
+                                <span style="color: #e74c3c;">NO - School On</span>
+                                <span id="noPercent" style="color: #e74c3c;">0%</span>
+                            </div>
+                            <div class="vote-bar-bg">
+                                <div class="vote-bar-fill no" id="noBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-votes">
+                        Total votes: <strong id="totalVotes">0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Canada Only - Powered by WeatherAPI.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
