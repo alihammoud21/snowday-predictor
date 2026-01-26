@@ -13,10 +13,17 @@ def after_request(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET,POST,OPTIONS'
     return response
 VOTES_FILE = 'votes.json'
+VISITORS_FILE = 'visitors.json'
 votes_lock = Lock()
+visitors_lock = Lock()
+
 if not os.path.exists(VOTES_FILE):
     with open(VOTES_FILE, 'w') as f:
         json.dump({}, f)
+
+if not os.path.exists(VISITORS_FILE):
+    with open(VISITORS_FILE, 'w') as f:
+        json.dump({'total_views': 0, 'unique_visitors': []}, f)
 def load_votes():
     """Load votes from file"""
     with votes_lock:
@@ -30,6 +37,21 @@ def save_votes_to_file(votes_data):
     with votes_lock:
         with open(VOTES_FILE, 'w') as f:
             json.dump(votes_data, f, indent=2)
+
+def load_visitors():
+    """Load visitor data from file"""
+    with visitors_lock:
+        try:
+            with open(VISITORS_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return {'total_views': 0, 'unique_visitors': []}
+
+def save_visitors(visitor_data):
+    """Save visitor data to file"""
+    with visitors_lock:
+        with open(VISITORS_FILE, 'w') as f:
+            json.dump(visitor_data, f, indent=2)
 POSTAL_TO_CITY = {
     'M': {'city': 'Toronto', 'code': 's0000458'},
     'K': {'city': 'Ottawa', 'code': 's0000430'},
@@ -207,6 +229,53 @@ def change_vote():
         'location': location,
         'votes': all_votes[location]
     })
+
+@app.route('/api/visitor', methods=['POST', 'OPTIONS'])
+def track_visitor():
+    """Track a page visit"""
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
+    
+    data = request.get_json()
+    visitor_id = data.get('visitorId')
+    
+    if not visitor_id:
+        return jsonify({'error': 'Invalid request'}), 400
+    
+    visitor_data = load_visitors()
+    
+    # Increment total views
+    visitor_data['total_views'] = visitor_data.get('total_views', 0) + 1
+    
+    # Track unique visitors (keep last 10000)
+    unique_visitors = visitor_data.get('unique_visitors', [])
+    if visitor_id not in unique_visitors:
+        unique_visitors.append(visitor_id)
+        if len(unique_visitors) > 10000:
+            unique_visitors = unique_visitors[-10000:]
+        visitor_data['unique_visitors'] = unique_visitors
+    
+    save_visitors(visitor_data)
+    
+    return jsonify({
+        'success': True,
+        'total_views': visitor_data['total_views'],
+        'unique_visitors': len(visitor_data['unique_visitors'])
+    })
+
+@app.route('/api/stats', methods=['GET', 'OPTIONS'])
+def get_stats():
+    """Get visitor statistics"""
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
+    
+    visitor_data = load_visitors()
+    
+    return jsonify({
+        'total_views': visitor_data.get('total_views', 0),
+        'unique_visitors': len(visitor_data.get('unique_visitors', []))
+    })
+
 if __name__ == '__main__':
     print("Starting Weather Proxy Server...")
     print("Using Environment Canada as data source")
