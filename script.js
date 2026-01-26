@@ -519,3 +519,19 @@ document.getElementById('backBtn').addEventListener('click', () => {
     document.querySelector('.container').classList.remove('has-results');
     document.getElementById('postalCode').value = '';
 });
+async function fetchAndDisplayStats() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/stats`);
+        if (response.ok) {
+            const stats = await response.json();
+            document.getElementById('totalViews').textContent = stats.total_views || 0;
+            document.getElementById('uniqueVisitors').textContent = stats.unique_visitors || 0;
+        }
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+    }
+}
+
+// Update stats on page load and every 30 seconds
+fetchAndDisplayStats();
+setInterval(fetchAndDisplayStats, 30000);
